@@ -1,4 +1,4 @@
-const { Command } = require("./.gitignore/node_modules/commander")
+const { Command } = require("commander")
 const program = new Command()
 const { read, write } = require("./utils/helper")
 const fs = require("fs")
