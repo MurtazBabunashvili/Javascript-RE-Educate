@@ -118,4 +118,24 @@ const findOrder = (req, res) => {
 }
 
 
-module.exports = {pagination, createOrder, deleteOrder, updateOrder, findOrder}
+const updateStatus = (req, res) => {
+    const {id} = req.params
+    const {status} = req.body
+
+    if (!status) {
+        return res.status(400).json({message:"You have to pass status field", data:null})
+    }
+    const findIndexById = orders.findIndex(el => el.id === Number(id))
+    if (findIndexById === -1) {
+        return res.status(404).json({message:"Order not found!", data:null})
+    }
+
+    orders[findIndexById] = {
+        ...orders[findIndexById],
+        status
+    }
+
+    res.json({message:"Status updated successfully", data:orders[findIndexById]})
+}
+
+module.exports = {pagination, createOrder, deleteOrder, updateOrder, findOrder, updateStatus}
