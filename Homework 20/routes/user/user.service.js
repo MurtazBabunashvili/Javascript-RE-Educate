@@ -2,7 +2,7 @@ const {isValidObjectId} = require("mongoose")
 const userSchema = require("../../models/user.model.js")
 
 const findAllUsers = async (req, res) => {
-    const allUsers = await userSchema.find()
+    const allUsers = await userSchema.find().populate("expenses")
     res.json({message:"All users found successfully", data:allUsers})
 }
 
@@ -12,7 +12,7 @@ const findUserById = async (req, res) => {
         return res.status(400).json({message:"Invalid id", data:null})
     }
 
-    const findUser = await userSchema.findById(id)
+    const findUser = await userSchema.findById(id).select("-password")
     if(!findUser) {
         return res.status(404).json({message:"User not found", data:null})
     }
@@ -30,7 +30,7 @@ const updateUserById =async (req, res) => {
         return res.status(400).json({message:"Invalid parameters passed", data:null})
     }
 
-    const updatedUser = await userSchema.findByIdAndUpdate(id, {fullName, email})
+    const updatedUser = await userSchema.findByIdAndUpdate(id, {fullName, email}, {new:true}).select("-password")
     if (!updatedUser) {
         return res.json({message:"id not found", data:null})
     }

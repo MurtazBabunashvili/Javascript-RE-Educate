@@ -14,7 +14,7 @@ const createExpense = async (req, res) => {
 }
 
 const getAllExpenses = async (req, res) => {
-    const allExpenses = await expenseSchema.find()
+    const allExpenses = await expenseSchema.find().populate("user", "-password")
     res.json({message:"All expenses found successfully", data:allExpenses})
 }
 
@@ -24,7 +24,7 @@ const findExpenseById = async (req, res) => {
     if(!isValidObjectId(id)) {
         return res.status(400).json({message:"Invalid id", data:null})
     }
-    const expense = await expenseSchema.findById(id)
+    const expense = await expenseSchema.findById(id).populate("user", "-password")
     if(!expense) {
         return res.status(404).json({message:"Expense can not be found", data:null})
     }
@@ -42,7 +42,7 @@ const updateExpenseById = async (req, res) => {
         return res.status(400).json({message:"Invalid parameters"})
     }
 
-    const updateExpense = await expenseSchema.findByIdAndUpdate(id, {title, amount}, {new:true}) //Date stays same because it implies to creation date
+    const updateExpense = await expenseSchema.findByIdAndUpdate(id, {title, amount}, {new:true}).populate("user", "-password") //Date stays same because it implies to creation date
     if (!updateExpense) {
         return res.status(404).json({message:"Expense can not be found", data:null})
     }
@@ -54,11 +54,12 @@ const deleteExpenseById = async (req, res) => {
     if(!isValidObjectId(id)) {
         return res.status(400).json({message:"Invalid id", data:null})
     }
+    const expense = await expenseSchema.findById(id).populate("user", "-password")
     const deletedExpense = await expenseSchema.findByIdAndDelete(id)
     if(!deletedExpense) {
         return res.status(404).json({message:"Expense can not be found", data:null})
     }
-    res.json({message:"Expense deleted successfully", data:deletedExpense})
+    res.json({message:"Expense deleted successfully", data:expense}) // returning deletedExpense is not good practice because it will return user with password too!
 }
 
 module.exports = {createExpense, getAllExpenses, findExpenseById, updateExpenseById, deleteExpenseById}
