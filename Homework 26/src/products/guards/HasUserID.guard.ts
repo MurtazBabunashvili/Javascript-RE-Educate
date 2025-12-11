@@ -16,6 +16,8 @@ export class HasUserIDGuard implements CanActivate {
     if (!userId || !isValidObjectId(userId)) {
       throw new BadRequestException('User id must be valid');
     }
+
+    request.id = userId;
     return true;
   }
 }

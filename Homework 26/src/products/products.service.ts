@@ -23,9 +23,13 @@ export class ProductsService {
       ...createProductDto,
       user: id,
     });
-    const updateUserById = await this.userModel.findByIdAndUpdate(id, {
-      $push: { products: createProduct._id },
-    });
+    const updateUserById = await this.userModel.findByIdAndUpdate(
+      id,
+      {
+        $push: { products: createProduct._id },
+      },
+      { new: true },
+    );
     if (!updateUserById) {
       throw new NotFoundException('User not found!');
     }
@@ -37,7 +41,7 @@ export class ProductsService {
   }
 
   async findOne(id: string) {
-    if (isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid mongo id');
     }
     const findProduct = await this.productModel.findById(id);
@@ -49,12 +53,13 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    if (isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid mongo id');
     }
     const updatedProduct = await this.productModel.findByIdAndUpdate(
       id,
       updateProductDto,
+      { new: true },
     );
     if (!updatedProduct) {
       throw new NotFoundException('Product not found');
@@ -63,13 +68,19 @@ export class ProductsService {
   }
 
   async remove(id: string) {
-    if (isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid mongo id');
     }
-    const deletedProduct = await this.productModel.findByIdAndUpdate(id);
+    const deletedProduct = await this.productModel.findByIdAndDelete(id);
     if (!deletedProduct) {
       throw new NotFoundException('Product not found');
     }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      deletedProduct.user,
+      { $pull: { products: deletedProduct._id } },
+      { new: true },
+    );
     return deletedProduct;
   }
 }

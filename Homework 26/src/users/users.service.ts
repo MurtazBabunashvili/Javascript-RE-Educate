@@ -30,7 +30,7 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    if (isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid mongo id');
     }
     const findUser = await this.userModel.findById(id);
@@ -41,7 +41,7 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    if (isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid mongo id');
     }
     const updatedUser = await this.userModel
@@ -54,7 +54,7 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    if (isValidObjectId(id)) {
+    if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid mongo id');
     }
     const deletedUser = await this.userModel.findByIdAndDelete(id);

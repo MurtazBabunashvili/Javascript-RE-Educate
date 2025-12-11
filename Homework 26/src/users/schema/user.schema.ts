@@ -12,8 +12,8 @@ export class User {
   @Prop({ type: String })
   password: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'product' })
-  products: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product' }] })
+  products: mongoose.Schema.Types.ObjectId[];
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
