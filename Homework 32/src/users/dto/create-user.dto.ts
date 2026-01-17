@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  // user იქმნება auth-ში, ამიტომ აქ dto არ არის საჭირო
+  // user იქმნება auth-ში, ამიტომ აქ swagger-ით აღწერა არ არის საჭირო
   @IsNotEmpty()
   @IsString()
   @Length(2, 50)
