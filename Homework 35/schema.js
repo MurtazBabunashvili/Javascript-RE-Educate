@@ -33,7 +33,7 @@ export const typeDefs = `#graphql
     input createPostDTO {
         title: String,
         body: String
-        user: User
+        user: ID
     }
 
     input updatePostDTO {
