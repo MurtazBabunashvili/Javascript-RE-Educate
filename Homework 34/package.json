@@ -1,0 +1,18 @@
+{
+  "name": "homework-34",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --watch server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@apollo/server": "^5.3.0",
+    "graphql": "^16.12.0"
+  }
+}
