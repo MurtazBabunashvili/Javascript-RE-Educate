@@ -69,6 +69,37 @@ const resolvers = {
       };
       return "User updated successfully";
     },
+    createPost(_, { createPostDTO }) {
+      const lastId = posts[posts.length - 1]?.id || 0;
+      const newObj = {
+        id: lastId + 1,
+        title: createPostDTO.title,
+        body: createPostDTO.body,
+        user: createPostDTO.user,
+      };
+      posts.push(newObj);
+      return "Post created successfully";
+    },
+    updatePost(_, { id, updatePostDTO }) {
+      const findPostIndex = posts.findIndex((el) => el.id === Number(id));
+      if (findPostIndex === -1) {
+        return "Post not found";
+      }
+      posts[findPostIndex] = {
+        ...posts[findPostIndex],
+        title: updatePostDTO.title || posts[findPostIndex],
+        body: updatePostDTO.body || posts[findPostIndex],
+      };
+      return "Post updated successfully";
+    },
+    deletePost(_, { id }) {
+      const findIndex = posts.findIndex((el) => el.id === Number(id));
+      if (findIndex === -1) {
+        return false;
+      }
+      posts.splice(findIndex, 1);
+      return true;
+    },
   },
 };
 

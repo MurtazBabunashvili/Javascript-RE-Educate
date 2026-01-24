@@ -30,9 +30,23 @@ export const typeDefs = `#graphql
         age: Int
     }
 
+    input createPostDTO {
+        title: String,
+        body: String
+        user: User
+    }
+
+    input updatePostDTO {
+        title: String
+        body: String
+    }
+
     type Mutation {
         deleteUser(id:ID!): Boolean
         createUser(createUserDTO: createUserDTO): String
         updateUser(id:ID!, updateUserDTO: updateUserDTO): String
+        deletePost(id:ID!): Boolean
+        createPost(createPostDTO: createPostDTO): String
+        updatePost(id:ID!, updatePostDTO: updatePostDTO): String
     }
 `;
