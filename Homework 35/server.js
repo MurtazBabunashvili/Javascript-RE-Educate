@@ -87,8 +87,8 @@ const resolvers = {
       }
       posts[findPostIndex] = {
         ...posts[findPostIndex],
-        title: updatePostDTO.title || posts[findPostIndex],
-        body: updatePostDTO.body || posts[findPostIndex],
+        title: updatePostDTO.title || posts[findPostIndex].title,
+        body: updatePostDTO.body || posts[findPostIndex].body,
       };
       return "Post updated successfully";
     },
