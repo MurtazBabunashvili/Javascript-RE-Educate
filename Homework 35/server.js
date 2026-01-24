@@ -25,14 +25,14 @@ const resolvers = {
   },
 
   User: {
-    posts(userId) {
-      return posts.filter((el) => el.id === Number(userId));
+    posts(parent) {
+      return posts.filter((el) => el.user === parent.id);
     },
   },
 
   Posts: {
-    user(postId) {
-      return users.find((el) => el.id === Number(postId));
+    user(parent) {
+      return users.find((el) => el.id === parent.user);
     },
   },
 
