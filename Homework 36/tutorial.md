@@ -10,7 +10,6 @@ query GetUserById($id: String!) {
   }
 }
 ```
-````
 
 ```graphql
 mutation createUser($createUser: CreateUserInput!) {
@@ -99,8 +98,4 @@ mutation DeletePost($id: String!) {
     title
   }
 }
-```
-
-```
-
 ```
