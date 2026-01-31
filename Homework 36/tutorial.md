@@ -1,4 +1,3 @@
-````md
 # User commands
 
 ```graphql
