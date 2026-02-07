@@ -83,7 +83,30 @@ export class AwsService {
     }
 
     if (transformations.flip) {
-      transformer = transformer.rotate(transformations.flip);
+      transformer = transformer.flip();
+    }
+
+    if (transformations.flop) {
+      transformer = transformer.flop();
+    }
+
+    if (transformations.filters?.grayscale) {
+      transformer = transformer.grayscale();
+    }
+
+    if (transformations.filters?.blur) {
+      transformer = transformer.blur();
+    }
+
+    if (transformations.filters?.sharpen) {
+      transformer = transformer.sharpen();
+    }
+
+    if (transformations.format) {
+      transformer = transformer.toFormat(transformations.format);
+    }
+    if (transformations.quality) {
+      transformer = transformer.jpeg({ quality: transformations.quality });
     }
 
     const transformedBuffer = await transformer.toBuffer();
