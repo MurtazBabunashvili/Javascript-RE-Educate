@@ -22,6 +22,9 @@ export class UsersService {
   getImage(fileId) {
     return this.AwsService.getImageById(fileId);
   }
+  transformImage(fileBuffer: Buffer, transformations: any) {
+    return this.AwsService.transformImage(fileBuffer, transformations);
+  }
   findAll() {
     return this.userModel.find().lean();
   }

@@ -4,6 +4,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import sharp from 'sharp';
 import { Readable } from 'stream';
 @Injectable()
 export class AwsService {
@@ -56,5 +57,45 @@ export class AwsService {
       const file = `data:${fileStream.ContentType};base64,${base64}`;
       return file;
     }
+  }
+
+  async transformImage(fileBuffer, transformations) {
+    let transformer = sharp(fileBuffer);
+
+    if (transformations.resize) {
+      transformer = transformer.resize(
+        transformations.resize.width,
+        transformations.resize.height,
+      );
+    }
+
+    if (transformations.crop) {
+      transformer = transformer.extract({
+        left: transformations.crop.x || 0,
+        top: transformations.crop.y || 0,
+        width: transformations.crop.width,
+        height: transformations.crop.height,
+      });
+    }
+
+    if (transformations.rotate) {
+      transformer = transformer.rotate(transformations.rotate);
+    }
+
+    if (transformations.flip) {
+      transformer = transformer.rotate(transformations.flip);
+    }
+
+    const transformedBuffer = await transformer.toBuffer();
+
+    const randomPath = Math.random().toString().slice(2);
+    const transformedPath = `images/transformed/${randomPath}`;
+
+    await this.uploadImage(transformedPath, transformedBuffer);
+
+    return {
+      filePath: transformedPath,
+      transformations,
+    };
   }
 }

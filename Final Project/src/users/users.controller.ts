@@ -34,6 +34,17 @@ export class UsersController {
     return this.usersService.getImage(fileId);
   }
 
+  @UseGuards(HasTokenGuard)
+  @Post('/transform')
+  @UseInterceptors(FileInterceptor('file'))
+  transformImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('transformations') transformations: string,
+  ) {
+    const parsedtransformations = JSON.parse(transformations);
+    return this.usersService.transformImage(file.buffer, parsedtransformations);
+  }
+
   @Get()
   findAll() {
     return this.usersService.findAll();
