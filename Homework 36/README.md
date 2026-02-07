@@ -16,7 +16,7 @@ NestJS აპლიკაცია GraphQL API-თ და MongoDB ბაზი�
 
 ### 2. Docker Images
 
-![Docker Images](images/docker.images.png.)
+![Docker Images](images/docker.images.png)
 
 **აღწერა:** Docker images-ის სია
 
