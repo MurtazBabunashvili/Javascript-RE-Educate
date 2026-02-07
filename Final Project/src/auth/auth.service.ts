@@ -1,14 +1,9 @@
-import {
-  BadGatewayException,
-  BadRequestException,
-  Body,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Body, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { signUpDTO } from './dto/sign-up.dto';
+import { SignUpDTO } from './dto/sign-up.dto';
 import bcrypt from 'bcrypt';
-import { signInDTO } from './dto/sign-in.dto';
+import { SignInDTO } from './dto/sign-in.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,10 +12,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(@Body() signUpDTO: signUpDTO) {
+  async signUp(@Body() signUpDTO: SignUpDTO) {
     const existingUser = await this.userService.findByEmail(signUpDTO.email);
     if (existingUser) {
-      throw new BadGatewayException('Invalid credentials');
+      throw new BadRequestException('Invalid credentials');
     }
 
     const hashedPassword = await bcrypt.hash(signUpDTO.password, 10);
@@ -29,11 +24,10 @@ export class AuthService {
       ...signUpDTO,
       password: hashedPassword,
     });
-
     return createdUser;
   }
 
-  async signIn(@Body() signInDTO: signInDTO) {
+  async signIn(@Body() signInDTO: SignInDTO) {
     const existingUser = await this.userService.findByEmail(signInDTO.email);
     if (!existingUser) {
       throw new BadRequestException('Invalid credentials');
@@ -49,17 +43,11 @@ export class AuthService {
 
     const payLoad = {
       userId: existingUser._id,
-      role: existingUser.role,
     };
 
     const accessToken = await this.jwtService.sign(payLoad, {
       expiresIn: '1h',
     });
     return accessToken;
-  }
-
-  async currentUser(userId: string) {
-    const findUserById = await this.userService.findOne(userId);
-    return findUserById;
   }
 }

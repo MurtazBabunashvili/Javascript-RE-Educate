@@ -1,0 +1,35 @@
+import {
+  BadRequestException,
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
+
+@Injectable()
+export class HasTokenGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+
+    const token = this.getToken(request.headers);
+
+    try {
+      const payLoad = this.jwtService.verify(token);
+      request.userId = payLoad.userId;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException();
+    }
+    return true;
+  }
+
+  getToken(headers) {
+    if (!headers['authorization']) return null;
+    const [type, token] = headers['authorization'].split(' ');
+    return type === 'Bearer' ? token : null;
+  }
+}
