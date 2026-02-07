@@ -19,6 +19,9 @@ export class UsersService {
   uploadImage(filePath, file) {
     return this.AwsService.uploadImage(filePath, file);
   }
+  getImage(fileId) {
+    return this.AwsService.getImageById(fileId);
+  }
   findAll() {
     return this.userModel.find().lean();
   }

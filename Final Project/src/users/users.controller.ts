@@ -28,6 +28,12 @@ export class UsersController {
     return this.usersService.uploadImage(filePath, file.buffer);
   }
 
+  @UseGuards(HasTokenGuard)
+  @Post('getImage')
+  getImage(@Body('fileId') fileId) {
+    return this.usersService.getImage(fileId);
+  }
+
   @Get()
   findAll() {
     return this.usersService.findAll();
