@@ -3,7 +3,11 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import sharp from 'sharp';
 import { Readable } from 'stream';
 @Injectable()
@@ -120,5 +124,20 @@ export class AwsService {
       filePath: transformedPath,
       transformations,
     };
+  }
+  async transformImageById(imageId: string, transformations: any) {
+    if (!imageId) {
+      throw new BadRequestException('Image ID is required');
+    }
+
+    const base64Image = await this.getImageById(imageId);
+
+    if (!base64Image) {
+      throw new NotFoundException('Image not found');
+    }
+    const base64Data = base64Image.split(',')[1];
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+
+    return this.transformImage(imageBuffer, transformations);
   }
 }
