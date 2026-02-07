@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -45,6 +46,13 @@ export class UsersController {
     return this.usersService.transformImageById(fileId, parsedtransformations);
   }
 
+  @UseGuards(HasTokenGuard)
+  @Get('getImages')
+  getImages(@Query('page') page?: string, @Query('take') take?: string) {
+    const parsedPage = parseInt(page || '1');
+    const parsedTake = parseInt(take || '5');
+    return this.usersService.getImages(parsedPage, parsedTake);
+  }
   @Get()
   findAll() {
     return this.usersService.findAll();

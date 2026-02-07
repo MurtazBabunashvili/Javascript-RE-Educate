@@ -142,7 +142,7 @@ export class AwsService {
     return this.transformImage(imageBuffer, transformations);
   }
 
-  async getImages(page = 1, take = 5) {
+  async getImages(page, take) {
     const config = {
       Bucket: this.bucketName,
       Prefix: 'images/',
