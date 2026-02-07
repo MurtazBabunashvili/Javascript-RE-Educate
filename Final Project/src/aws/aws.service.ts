@@ -1,5 +1,6 @@
 import {
   GetObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -139,5 +140,19 @@ export class AwsService {
     const imageBuffer = Buffer.from(base64Data, 'base64');
 
     return this.transformImage(imageBuffer, transformations);
+  }
+
+  async getImages(page = 1, take = 5) {
+    const config = {
+      Bucket: this.bucketName,
+      Prefix: 'images/',
+    };
+    const getFilesCommand = new ListObjectsV2Command(config);
+    const streamFiles = await this.s3.send(getFilesCommand);
+
+    const images = streamFiles.Contents || [];
+    const start = (page - 1) * take;
+    const end = start + take;
+    return images.slice(start, end);
   }
 }
