@@ -10,7 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRoot('mongodb://localhost:27017/mydb'),
+    MongooseModule.forRoot('mongodb://host.docker.internal:27017/homework36'),
     PostsModule,
     UsersModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
