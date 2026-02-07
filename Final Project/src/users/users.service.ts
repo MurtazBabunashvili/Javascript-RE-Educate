@@ -4,13 +4,20 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 import { User } from './schema/user.schema';
+import { AwsService } from 'src/aws/aws.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel('user') private userModel: Model<User>) {}
+  constructor(
+    @InjectModel('user') private userModel: Model<User>,
+    private readonly AwsService: AwsService,
+  ) {}
 
   create(CreateUserDto: CreateUserDTO) {
     return this.userModel.create(CreateUserDto);
+  }
+  uploadImage(filePath, file) {
+    return this.AwsService.uploadImage(filePath, file);
   }
   findAll() {
     return this.userModel.find().lean();

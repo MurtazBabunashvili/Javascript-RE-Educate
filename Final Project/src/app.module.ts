@@ -5,12 +5,13 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal:true}),
     MongooseModule.forRoot(process.env.MONGO_URI!)
-    ,UsersModule, AuthModule],
+    ,UsersModule, AuthModule, AwsModule],
   controllers: [AppController],
   providers: [AppService],
 })

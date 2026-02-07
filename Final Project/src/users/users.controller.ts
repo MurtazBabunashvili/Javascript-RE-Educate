@@ -6,14 +6,27 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { HasTokenGuard } from 'src/auth/guards/HasToken.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @UseGuards(HasTokenGuard)
+  @Post('/fileUpload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const path = Math.random().toString().slice(2);
+    const filePath = `images/${path}`;
+    return this.usersService.uploadImage(filePath, file.buffer);
+  }
 
   @Get()
   findAll() {
