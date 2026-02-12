@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import sharp from 'sharp';
 import { Readable } from 'stream';
+import { buffer } from 'stream/consumers';
 @Injectable()
 export class AwsService {
   private bucketName;
@@ -142,6 +143,37 @@ export class AwsService {
     return this.transformImage(imageBuffer, transformations);
   }
 
+  async downloadImageById(fileId: string) {
+    if (!fileId) {
+      throw new BadRequestException('File id is required field');
+    }
+
+    const config = {
+      Key: fileId,
+      Bucket: this.bucketName,
+    };
+
+    const getCommand = new GetObjectCommand(config);
+
+    try {
+      const fileStream = await this.s3.send(getCommand);
+
+      if (fileStream.Body instanceof Readable) {
+        const chunks: Buffer[] = [];
+        for await (const chunk of fileStream.Body) {
+          chunks.push(chunk);
+        }
+        const fileBuffer = Buffer.concat(chunks);
+
+        return {
+          buffer: fileBuffer,
+          contentType: fileStream.ContentType || 'application/octet-stream',
+        };
+      }
+    } catch (error) {
+      throw new NotFoundException(`Image with id ${fileId} not found!`);
+    }
+  }
   async getImages(page, take) {
     const config = {
       Bucket: this.bucketName,

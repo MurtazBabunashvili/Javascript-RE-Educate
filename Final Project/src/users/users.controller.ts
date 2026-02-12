@@ -10,6 +10,7 @@ import {
   UploadedFile,
   UseGuards,
   Query,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -42,6 +43,19 @@ export class UsersController {
     @Body('transformations') transformations: any,
   ) {
     return this.usersService.transformImageById(fileId, transformations);
+  }
+
+  @UseGuards(HasTokenGuard)
+  @Post('download')
+  async downloadImage(@Body('fileId') fileId: string, @Res() res: any) {
+    const imageBuffer = await this.usersService.downloadImage(fileId);
+
+    res.set({
+      'Content-Type': imageBuffer?.contentType,
+      'Content-Disposition': `attachment; filename="${fileId.split('/').pop()}"`,
+    });
+
+    res.send(imageBuffer?.buffer);
   }
 
   @UseGuards(HasTokenGuard)
