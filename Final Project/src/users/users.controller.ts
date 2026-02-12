@@ -36,14 +36,12 @@ export class UsersController {
   }
 
   @UseGuards(HasTokenGuard)
-  @Post(':id/transform')
-  @UseInterceptors(FileInterceptor('file'))
+  @Post('transform')
   transformImage(
-    @Param('id') fileId: string,
-    @Body('transformations') transformations: string,
+    @Body('fileId') fileId: string,
+    @Body('transformations') transformations: any,
   ) {
-    const parsedtransformations = JSON.parse(transformations);
-    return this.usersService.transformImageById(fileId, parsedtransformations);
+    return this.usersService.transformImageById(fileId, transformations);
   }
 
   @UseGuards(HasTokenGuard)
