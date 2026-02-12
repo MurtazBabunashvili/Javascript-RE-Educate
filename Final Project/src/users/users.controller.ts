@@ -46,19 +46,6 @@ export class UsersController {
   }
 
   @UseGuards(HasTokenGuard)
-  @Post('download')
-  async downloadImage(@Body('fileId') fileId: string, @Res() res: any) {
-    const imageBuffer = await this.usersService.downloadImage(fileId);
-
-    res.set({
-      'Content-Type': imageBuffer?.contentType,
-      'Content-Disposition': `attachment; filename="${fileId.split('/').pop()}"`,
-    });
-
-    res.send(imageBuffer?.buffer);
-  }
-
-  @UseGuards(HasTokenGuard)
   @Get('getImages')
   getImages(@Query('page') page?: string, @Query('take') take?: string) {
     const parsedPage = parseInt(page || '1');

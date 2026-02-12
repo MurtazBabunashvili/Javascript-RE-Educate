@@ -25,9 +25,6 @@ export class UsersService {
   transformImageById(fileId: string, transformations: any) {
     return this.AwsService.transformImageById(fileId, transformations);
   }
-  downloadImage(fileId: string) {
-    return this.AwsService.downloadImageById(fileId);
-  }
 
   getImages(page: number, take: number) {
     return this.AwsService.getImages(page, take);
