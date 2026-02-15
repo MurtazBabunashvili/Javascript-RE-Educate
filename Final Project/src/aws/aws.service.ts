@@ -117,8 +117,9 @@ export class AwsService {
 
     const transformedBuffer = await transformer.toBuffer();
 
+    const format = transformations.format || 'jpeg';
     const randomPath = Math.random().toString().slice(2);
-    const transformedPath = `images/transformed/${randomPath}`;
+    const transformedPath = `images/transformed/${randomPath}.${format}`;
 
     await this.uploadImage(transformedPath, transformedBuffer);
 
