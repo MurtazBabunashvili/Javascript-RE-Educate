@@ -141,33 +141,33 @@ export default function Home() {
 
 const styles = {
   container: {
-    minHeight: "100vh",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
     background: "#000",
     color: "#fff",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
   },
   joinBox: {
     display: "flex",
     flexDirection: "column",
     gap: 10,
     width: 300,
+    margin: "auto",
   },
   chatBox: {
-    width: "100%",
-    maxWidth: 700,
-    height: "70vh",
+    flex: 1,
     overflowY: "auto",
     padding: 20,
   },
   inputBar: {
     display: "flex",
     gap: 10,
-    width: "100%",
-    maxWidth: 700,
     padding: 20,
+    borderTop: "1px solid #222",
   },
   input: {
     flex: 1,
